@@ -13,29 +13,200 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: lightgray;
+            background-color: rgb(145, 188, 253);
         }
         .header {
             width: 100%;
-            background-color: white;
+            background-color: rgb(255, 255, 255);
             padding: 10px 20px;
             font-size: 24px;
             box-sizing: border-box;
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            align-items: left;
         }
-        .circle {
-            width: 100px;
-            height: 100px;
-            background-color: blue;
-            border-radius: 50%;
+        .water-heater-icon {
+            width: 200px;
+            height: 200px;
+            margin-top: 60px;
+        }
+        .navigate-button:hover {
+            background-color: #007BB5;
+        }
+        .top-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0px;
+        }
+        .navigate-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .slider-container {
+            width: 50%;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .slider {
+            width: 100%;
+        }
+        .slider-label {
+            margin-top: 20px;
+            font-size: 38px;
+        }
+        .status-line {
+            margin-top: 10px;
+            font-size: 28px;
+            /* font-weight: bold; */
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            font-style: italic;
+        }
+        .heating-label {
+            margin-top: 10px;
+            font-size: 26px;
+            /* font-style: italic; */
+        }
+        .mode-buttons {
+            display: flex;
+            gap: 50px;
+            margin-top: 20px;
+        }
+        .mode-button {
+            padding: 10px;
+            font-size: 32px;
+            cursor: pointer;
+            border: 1px solid #007BB5;
+            background-color: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .mode-button img {
+            width: 60px;
+            height: 50px;
+        }
+        .bottom-nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            position: absolute;
+            bottom: 0;
+            background-color: rgb(255, 255, 255);
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .bottom-nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 14px;
+            color: #007BB5;
+            cursor: pointer;
+        }
+        .bottom-nav-button img {
+            width: 30px;
+            height: 30px;
         }
     </style>
 </head>
 <body>
     <div class="header">Home</div>
-    <div class="circle"></div>
+    <img src="water_heater_icon.png" alt="Water Heater Icon" class="water-heater-icon">
+
+    <div class="slider-container">
+        <input type="range" min="25" max="100" value="25" class="slider" id="temperature-slider">
+        <div class="slider-label" id="slider-value">25°C</div>
+        <div class="status-line" id="status-line">Mode: Custom, Temperature: 25°C</div>
+        <div class="status">Status: </div>
+        <div class="heating-label">Heating</div>
+    </div>
+
+    <div class="mode-buttons">
+        <button class="mode-button" id="custom-button"><img src="custom_icon.png" alt="Custom">Custom</button>
+        <button class="mode-button" id="hygiene-button"><img src="hygiene_icon.png" alt="Hygiene">Hygiene</button>
+        <button class="mode-button" id="comfort-button"><img src="comfort_icon.png" alt="Comfort">Comfort</button>
+        <button class="mode-button" id="hotspring-button"><img src="hotspring_icon.png" alt="Hotspring">Hotspring</button>
+    </div>
 
     <div class="top-section">
-        <button class="navigate-button" onclick="window.location.href='Web.html'">Go to Another Page</button>
+        <button class="navigate-button" onclick="window.location.href='Web.html'">Back</button>
     </div>
+
+    <div class="bottom-nav">
+        <div class="bottom-nav-button" id="power-button">
+            <img src="power_icon.png" alt="Power">
+            Power
+        </div>
+        <div class="bottom-nav-button" id="timer-button">
+            <img src="timer_icon.png" alt="Timer">
+            Timer
+        </div>
+        <div class="bottom-nav-button" id="schedule-button">
+            <img src="schedule_icon.png" alt="Schedule">
+            Schedule
+        </div>
+        <div class="bottom-nav-button" id="energy-button">
+            <img src="energy_icon.png" alt="Energy">
+            Energy
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('temperature-slider');
+        const sliderValue = document.getElementById('slider-value');
+        const statusLine = document.getElementById('status-line');
+        const customButton = document.getElementById('custom-button');
+        const hygieneButton = document.getElementById('hygiene-button');
+        const comfortButton = document.getElementById('comfort-button');
+        const hotspringButton = document.getElementById('hotspring-button');
+        let customMode = true;
+
+        slider.addEventListener('input', function() {
+            if (customMode) {
+                const value = slider.value + '°C';
+                sliderValue.textContent = value;
+                statusLine.textContent = `Mode: Custom, Temperature: ${value}`;
+            }
+        });
+
+        customButton.addEventListener('click', function() {
+            customMode = true;
+            statusLine.textContent = `Mode: Custom, Temperature: ${slider.value}°C`;
+        });
+
+        hygieneButton.addEventListener('click', function() {
+            customMode = false;
+            setSliderValue(37, 'Hygiene');
+        });
+
+        comfortButton.addEventListener('click', function() {
+            customMode = false;
+            setSliderValue(42, 'Comfort');
+        });
+
+        hotspringButton.addEventListener('click', function() {
+            customMode = false;
+            setSliderValue(75, 'Hotspring');
+        });
+
+        function setSliderValue(value, mode) {
+            slider.value = value;
+            const valueText = value + '°C';
+            sliderValue.textContent = valueText;
+            statusLine.textContent = `Mode: ${mode}, Temperature: ${valueText}`;
+        }
+    </script>
 </body>
 </html>
